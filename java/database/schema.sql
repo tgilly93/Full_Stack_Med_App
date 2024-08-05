@@ -16,8 +16,9 @@ DROP TABLE IF EXISTS Notification;
 CREATE TABLE Office (
 	office_id serial NOT NULL,
 	office_name varchar(50) UNIQUE NOT NULL,
-	office_address varchar(100) NOT NULL,
 	office_phone_number varchar(15),
+	office_address varchar(100) NOT NULL,
+	office_city varchar(100) NOT NULL,
 	state varchar(2) NOT NULL,
 	zip_code varchar(10),
 	office_open time,
