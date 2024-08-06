@@ -33,7 +33,12 @@ export default {
         username: '',
         password: '',
         confirmPassword: '',
-        role: 'user',
+        role: 'USER',
+        name: 'User One',
+        address: '1 User address, Anyplace 12345',
+        city: 'Willowick',
+        stateCode: 'OH',
+        zip: '44094'
       },
       registrationErrors: false,
       registrationErrorMsg: 'There were problems registering this user.',
