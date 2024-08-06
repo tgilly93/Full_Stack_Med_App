@@ -7,3 +7,14 @@
     <router-view />
   </div>
 </template>
+
+<script>
+import OfficeInfo from './components/officeinfo';
+
+export default {
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    OfficeInfo
+  }
+};
+</script>
