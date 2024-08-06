@@ -4,21 +4,22 @@ import javax.validation.Valid;
 
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.*;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import com.techelevator.dao.UserDao;
+import com.techelevator.security.jwt.TokenProvider;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.techelevator.dao.UserDao;
-import com.techelevator.security.jwt.JWTFilter;
-import com.techelevator.security.jwt.TokenProvider;
-
+/**
+ * AuthenticationController is a class used for handling requests to authenticate Users.
+ *
+ * It depends on an instance of a UserDao for retrieving and storing user data. This is provided
+ * through dependency injection.
+ */
 @RestController
 @CrossOrigin
 public class AuthenticationController {
@@ -34,35 +35,34 @@ public class AuthenticationController {
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginDto loginDto) {
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication, false);
-
-        User user;
+    public LoginResponseDto login(@Valid @RequestBody LoginDto loginDto) {
         try {
-            user = userDao.getUserByUsername(loginDto.getUsername());
-        } catch (DaoException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Username or password is incorrect.");
-        }
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-        return new ResponseEntity<>(new LoginResponseDto(jwt, user), httpHeaders, HttpStatus.OK);
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenProvider.createToken(authentication, false);
+
+            User user = userDao.getUserByUsername(loginDto.getUsername());
+            return new LoginResponseDto(jwt, user);
+        }
+        catch (DaoException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "DAO error - " + e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public void register(@Valid @RequestBody RegisterUserDto newUser) {
+    public User register(@Valid @RequestBody RegisterUserDto newUser) {
         try {
             if (userDao.getUserByUsername(newUser.getUsername()) != null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists.");
             } else {
-                userDao.createUser(newUser);
+                User user = userDao.createUser(
+                        new User(newUser.getUsername(),newUser.getPassword(), newUser.getRole(), newUser.getName(), newUser.getAddress(), newUser.getCity(), newUser.getStateCode(), newUser.getZIP())
+                );
+                return user;
             }
         }
         catch (DaoException e) {

@@ -1,12 +1,15 @@
 BEGIN TRANSACTION;
 
-INSERT INTO users (username,password_hash,role) VALUES ('user','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_USER');
-INSERT INTO users (username,password_hash,role) VALUES ('admin','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_ADMIN');
+INSERT INTO users (username,password_hash,role, name, address, city, state_code, zip) VALUES
+    ('user', '$2a$10$tmxuYYg1f5T0eXsTPlq/V.DJUKmRHyFbJ.o.liI1T35TFbjs2xiem','ROLE_USER',  'Jack O''Lantern', null, 'Cleveland', 'OH', '44123'),
+    ('admin','$2a$10$tmxuYYg1f5T0eXsTPlq/V.DJUKmRHyFbJ.o.liI1T35TFbjs2xiem','ROLE_ADMIN', 'Jill O''Lantern', null, 'Beverly Hills', 'CA', '90210');
 
 ---------------------------------------------------------------------------
 --------------------------test data for view modeling----------------------
 
-INSERT INTO users (username, password_hash, role) VALUES ('clinician_test', '$2y$10$LSUmYkcPkE7jIr/f/7nf4u5hLYPXDM3qTT3gOmZdoYLVS0OVyw.7S', 'ROLE_CLINICIAN');
+INSERT INTO users (username,password_hash,role, name, address, city, state_code, zip) VALUES
+    ('clinician_test', '$2a$10$tmxuYYg1f5T0eXsTPlq/V.DJUKmRHyFbJ.o.liI1T35TFbjs2xiem','ROLE_CLINICIAN',  'Jack O''Lantern', null, 'Cleveland', 'OH', '44123');
+
 
 INSERT INTO office (office_name, office_address, office_phone_number, state, zip_code, office_open, office_close) VALUES ('test_name', '123 test lane', '000-555-5555', 'DE', '19702', '08:00:00', '19:00:00');
 
