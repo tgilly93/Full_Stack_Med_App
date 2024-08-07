@@ -1,21 +1,18 @@
 BEGIN TRANSACTION;
 
-INSERT INTO users (username,password_hash,role, name, address, city, state_code, zip) VALUES
-    ('user', '$2a$10$tmxuYYg1f5T0eXsTPlq/V.DJUKmRHyFbJ.o.liI1T35TFbjs2xiem','ROLE_USER',  'Jack O''Lantern', null, 'Cleveland', 'OH', '44123'),
-    ('admin','$2a$10$tmxuYYg1f5T0eXsTPlq/V.DJUKmRHyFbJ.o.liI1T35TFbjs2xiem','ROLE_ADMIN', 'Jill O''Lantern', null, 'Beverly Hills', 'CA', '90210');
+INSERT INTO users (username,password_hash,role) VALUES ('user','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_USER');
+INSERT INTO users (username,password_hash,role) VALUES ('admin','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_ADMIN');
 
 ---------------------------------------------------------------------------
 --------------------------test data for view modeling----------------------
 
-INSERT INTO users (username,password_hash,role, name, address, city, state_code, zip) VALUES
-    ('clinician_test', '$2a$10$tmxuYYg1f5T0eXsTPlq/V.DJUKmRHyFbJ.o.liI1T35TFbjs2xiem','ROLE_CLINICIAN',  'Jack O''Lantern', null, 'Cleveland', 'OH', '44123');
+INSERT INTO users (username, password_hash, role) VALUES ('clinician_test', '$2y$10$LSUmYkcPkE7jIr/f/7nf4u5hLYPXDM3qTT3gOmZdoYLVS0OVyw.7S', 'ROLE_CLINICIAN');
 
-INSERT INTO users (username,password_hash,role, name, address, city, state_code, zip) VALUES
-    ('patient_test', '$2a$10$tmxuYYg1f5T0eXsTPlq/V.DJUKmRHyFbJ.o.liI1T35TFbjs2xiem','ROLE_PATIENT',  'Jack O''Lantern', null, 'Cleveland', 'OH', '44123');
+INSERT INTO users (username, password_hash, role) VALUES ('patient_test', '$2y$10$LSUmYkcPkE7jIr/f/7nf4u5hLYPXDM3qTT3gOmZdoYLVS0OVyw.7S', 'ROLE_PATIENT');
 
 INSERT INTO office (office_name, office_address, office_phone_number, office_city, state, zip_code, office_open, office_close) VALUES ('test_name', '123 test lane', '000-555-5555', 'Newark', 'DE', '19702', '08:00:00', '19:00:00');
 
-INSERT INTO patient (user_id, patient_first_name, patient_last_name, patient_date_of_birth, patient_address, patient_phone_number) VALUES ('4', 'patient_test_fname', 'patient_test_lname', '01/01/1900', '123 test lane', '555-000-5555'); 
+INSERT INTO patient (user_id, patient_first_name, patient_last_name, patient_date_of_birth, patient_address, patient_city, patient_state, zip_code, patient_phone_number) VALUES ('4', 'patient_test_fname', 'patient_test_lname', '01/01/1900', '123 test lane', 'Newark', 'DE', '19702', '555-000-5555'); 
 
 ---------------------------------------------------------------------------------------------------
 ------------------------------------Views----------------------------------------------------------
@@ -25,6 +22,9 @@ SELECT
 	patient_first_name,
 	patient_last_name,
 	patient_address,
+	patient_city,
+	patient_state,
+	zip_code,
 	patient_phone_number
 FROM
 	patient;
@@ -95,8 +95,34 @@ FROM
 	JOIN staff s on s.office_id = o.office_id
 	JOIN clinician c on c.staff_id = s.staff_id;
 	
-	
+CREATE VIEW patient_active_prescription AS
+SELECT
+	pr.patient_id as "Patient ID",
+	p.patient_first_name || ' ' || p.patient_last_name as "Name",
+	p.patient_date_of_birth as "DOB",
+	p.patient_address as "Street Address",
+	p.patient_city as "City",
+	p.patient_state as "State",
+	p.zip_code as "Zip Code",
+	p.patient_phone_number as "Phone",
+	pr.prescription_id as "Prescription ID",
+	pr.prescription_name as "Common Name",
+	pr.prescription_details as "Description",
+	pr.prescription_status as "Prescription Status",
+	pr.npi_number as "Prescribing Clinician"
+
+FROM
+	prescription pr
+	JOIN patient p on p.patient_id = pr.patient_id;	
 	
 
+CREATE VIEW prescription_info AS
+SELECT
+	prescription_id as "Prescription ID",
+	prescription_name as "Prescription Name",
+	prescription_details as "Description",
+	prescription_cost as "Cost"
+FROM
+	prescription;
 --------------------------------------------------------------------------------
 COMMIT TRANSACTION;

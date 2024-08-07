@@ -1,16 +1,16 @@
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS Office CASCADE;
-DROP TABLE IF EXISTS Staff CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS Patient CASCADE;
-DROP TABLE IF EXISTS Clinician CASCADE;
-DROP TABLE IF EXISTS Appointment CASCADE;
-DROP TABLE IF EXISTS Prescription CASCADE;
-DROP TABLE IF EXISTS Availability CASCADE;
-DROP TABLE IF EXISTS Transactions CASCADE;
-DROP TABLE IF EXISTS Messages CASCADE;
-DROP TABLE IF EXISTS Notification CASCADE;
+DROP TABLE IF EXISTS Office;
+DROP TABLE IF EXISTS Staff;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS Patient;
+DROP TABLE IF EXISTS Clinician;
+DROP TABLE IF EXISTS Appointment;
+DROP TABLE IF EXISTS Prescription;
+DROP TABLE IF EXISTS Availability;
+DROP TABLE IF EXISTS Transactions;
+DROP TABLE IF EXISTS Messages;
+DROP TABLE IF EXISTS Notification;
 
 --------------INIT DATABASE----------------
 CREATE TABLE Office (
@@ -38,16 +38,11 @@ CREATE TABLE Staff (
 );
 
 CREATE TABLE users (
-	user_id SERIAL,
-	username varchar(50) NOT NULL UNIQUE,
+	user_id serial NOT NULL,
+	username varchar(50) UNIQUE NOT NULL,
 	password_hash varchar(200) NOT NULL,
 	role varchar(50) NOT NULL,
-	name varchar(50) NOT NULL,
-	address varchar(100) NULL,
-	city varchar(50) NULL,
-	state_code char(2) NULL,
-	zip varchar(5) NULL,
-	CONSTRAINT PK_user PRIMARY KEY (user_id)
+	CONSTRAINT PK_users PRIMARY KEY(user_id)
 );
 
 CREATE TABLE Patient (
@@ -57,6 +52,9 @@ CREATE TABLE Patient (
 	patient_last_name varchar(50) NOT NULL,
 	patient_date_of_birth date NOT NULL,
 	patient_address varchar(100) NOT NULL,
+	patient_city varchar(100) NOT NULL,
+	patient_state varchar(2) NOT NULL,
+	zip_code varchar(10),
 	patient_phone_number varchar(15),
 	CONSTRAINT PK_Patient PRIMARY KEY(patient_id),
 	CONSTRAINT FK_Patient_User FOREIGN KEY(user_id) REFERENCES users(user_id)	
@@ -89,6 +87,7 @@ CREATE TABLE Appointment (
 
 CREATE TABLE Prescription (
 	prescription_id serial UNIQUE NOT NULL,
+	prescription_name text NOT NULL,
 	patient_id int NOT NULL,
 	npi_number int UNIQUE NOT NULL,
 	prescription_details text,
