@@ -70,19 +70,20 @@ FROM
 CREATE VIEW office_info AS
 SELECT
 	office_name as Name,
+	office_id as Office_Id, --TG change to naming convention
 	office_address as Location,
 	office_city as City,
 	state as State,
-	zip_code as "Zip Code",
-	office_phone_number as "Phone Number",
-	office_open || ' - ' || office_close as "Hours of Operation"
+	zip_code as "Zip_Code",
+	office_phone_number as "Phone_Number",
+	office_open || ' - ' || office_close as "Hours_of_Operation"
 FROM
 	office;
 
 CREATE VIEW clinician_office_info AS
 SELECT 
 	s.staff_first_name ||' ' || s.staff_last_name AS Physician,
-	o.office_name as "Primary Location",
+	o.office_name as "PrimaryLocation",
 	o.office_address as Address,
 	o.office_city as City,
 	o.state as State,

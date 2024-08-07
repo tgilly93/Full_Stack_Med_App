@@ -27,13 +27,17 @@ public class OfficeController {
 //
 //    // Update an existing office (restricted to authorized roles)
 //    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')")
-//    @PutMapping("/{officeId}")
-//    public HttpStatus updateOffice(@PathVariable int officeId, @RequestBody Office office) {
-//        if (officeDao.updateOffice(office)) {
-//            return HttpStatus.OK;
-//        }
-//        return HttpStatus.NOT_FOUND;
-//    }
+    @PutMapping("/{officeId}")
+    public HttpStatus updateOffice(@PathVariable int officeId, @RequestBody Office office) {
+        try {
+            if (officeDao.updateOffice(office)) {
+                return HttpStatus.OK;
+            }
+        }catch (Exception e) {
+            return HttpStatus.BAD_REQUEST;
+        }
+        return HttpStatus.NOT_FOUND;
+    }
 //
 //    // Add a new office (restricted to authorized roles)
 //    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')")

@@ -3,10 +3,16 @@ package com.techelevator.dao;
 import com.techelevator.model.Office;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
+@Component
 public class JdbcOfficeDao implements OfficeDao {
     private final JdbcTemplate jdbcTemplate;
 
@@ -16,7 +22,8 @@ public class JdbcOfficeDao implements OfficeDao {
 
     @Override
     public Office getOfficeById(int officeId) {
-        String sql = "SELECT * FROM Office WHERE office_id = ?";
+        String sql = "SELECT office_id, office_name, office_phone_number, office_address, office_city, state, zip_code, office_open, office_close\n" +
+                "FROM public.office WHERE office_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, officeId);
         if (results.next()) {
             return mapRowToOffice(results);
@@ -34,12 +41,14 @@ public class JdbcOfficeDao implements OfficeDao {
 //        }
 //        return offices;
 //    }
-//
-//    @Override
-//    public boolean updateOffice(Office office) {
-//        String sql = "UPDATE Office SET office_name = ?, office_phone_number = ?, office_address = ?, office_city = ?, state = ?, zip_code = ?, office_open = ?, office_close = ? WHERE office_id = ?";
-//        return jdbcTemplate.update(sql, office.getOfficeName(), office.getOfficePhoneNumber(), office.getOfficeAddress(), office.getOfficeCity(), office.getState(), office.getZipCode(), office.getOfficeOpen(), office.getOfficeClose(), office.getOfficeId()) > 0;
-//    }
+@Override
+    public boolean updateOffice(Office office) throws ParseException {
+       String sql = "UPDATE Office SET office_name = ?, office_phone_number = ?, office_address = ?, office_city = ?, state = ?, zip_code = ?, office_open = ?, office_close = ? WHERE office_id = ?";
+       DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+       Date formatedOpenTime = dateFormat.parse(office.getOfficeOpen());
+       Date formattedCloseTime = dateFormat.parse(office.getOfficeClose());
+       return jdbcTemplate.update(sql, office.getOfficeName(), office.getOfficePhoneNumber(), office.getOfficeAddress(), office.getOfficeCity(), office.getState(), office.getZipCode(), formatedOpenTime, formattedCloseTime, office.getOfficeId()) > 0;
+    }
 //
 //    @Override
 //    public boolean addOffice(Office office) {
@@ -48,16 +57,18 @@ public class JdbcOfficeDao implements OfficeDao {
 //    }
 
     private Office mapRowToOffice(SqlRowSet rs) {
-        return new Office(
-                rs.getInt("office_id"),
-                rs.getString("office_name"),
-                rs.getString("office_phone_number"),
-                rs.getString("office_address"),
-                rs.getString("office_city"),
-                rs.getString("state"),
-                rs.getString("zip_code"),
-                rs.getString("office_open"),
-                rs.getString("office_close")
-        );
+        Office newOffice = new Office();
+        newOffice.setOfficeId( rs.getInt("office_id"));
+        newOffice.setOfficeName(rs.getString("office_name"));
+        newOffice.setOfficePhoneNumber(rs.getString("office_phone_number"));
+        newOffice.setOfficeAddress(rs.getString("office_address"));
+        newOffice.setOfficeCity(rs.getString("office_city"));
+        newOffice.setState(rs.getString("state"));
+        newOffice.setZipCode(rs.getString("zip_code"));
+        newOffice.setOfficeOpen(rs.getString("office_open"));
+        newOffice.setOfficeClose(rs.getString("office_close"));
+
+        return newOffice;
+
     }
 }

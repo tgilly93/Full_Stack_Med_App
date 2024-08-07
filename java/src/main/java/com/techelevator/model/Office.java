@@ -26,6 +26,9 @@ public class Office {
         this.officeOpen = officeOpen;
         this.officeClose = officeClose;
     }
+    public Office() {
+
+    }
 
     public int getOfficeId() {
         return officeId;
