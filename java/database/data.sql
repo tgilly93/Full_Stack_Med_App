@@ -44,7 +44,7 @@ FROM
 
 CREATE VIEW scheduling_blocks AS
 SELECT
-	start_time || ' - ' || end_time as "Time Block",
+	start_time || ' - ' || end_time as "Time_Block",
 	Count(*) as block_id,
 	start_time,
 	end_time
@@ -55,10 +55,10 @@ GROUP BY
 
 CREATE VIEW scheduled_appointments AS
 SELECT
-	date as "Selected Date",
+	date as "Selected_Date",
 	patient_id as Patient,
 	s.staff_last_name ||', ' || s.staff_first_name AS Doctor,
-	sc.block_id as "Time Block",
+	sc.block_id as "Time_Block",
 	appointment_type as Type,
 	appointment_status as Status
 FROM
@@ -83,13 +83,13 @@ FROM
 CREATE VIEW clinician_office_info AS
 SELECT 
 	s.staff_first_name ||' ' || s.staff_last_name AS Physician,
-	o.office_name as "PrimaryLocation",
+	o.office_name as "Primary_Location",
 	o.office_address as Address,
 	o.office_city as City,
 	o.state as State,
-	o.zip_code as "Zip Code",
-	o.office_phone_number as "Phone Number",
-	o.office_open || ' - ' || o.office_close as "Hours of Operation"
+	o.zip_code as "Zip_Code",
+	o.office_phone_number as "Phone _Number",
+	o.office_open || ' - ' || o.office_close as "Hours_of_Operation"
 FROM
 	office o
 	JOIN staff s on s.office_id = o.office_id
@@ -97,19 +97,19 @@ FROM
 	
 CREATE VIEW patient_active_prescription AS
 SELECT
-	pr.patient_id as "Patient ID",
+	pr.patient_id as "Patient_ID",
 	p.patient_first_name || ' ' || p.patient_last_name as "Name",
 	p.patient_date_of_birth as "DOB",
-	p.patient_address as "Street Address",
+	p.patient_address as "Street_Address",
 	p.patient_city as "City",
 	p.patient_state as "State",
-	p.zip_code as "Zip Code",
+	p.zip_code as "Zip_Code",
 	p.patient_phone_number as "Phone",
-	pr.prescription_id as "Prescription ID",
-	pr.prescription_name as "Common Name",
+	pr.prescription_id as "Prescription_ID",
+	pr.prescription_name as "Common_Name",
 	pr.prescription_details as "Description",
-	pr.prescription_status as "Prescription Status",
-	pr.npi_number as "Prescribing Clinician"
+	pr.prescription_status as "Prescription_Status",
+	pr.npi_number as "Prescribing_Clinician"
 
 FROM
 	prescription pr
@@ -118,8 +118,8 @@ FROM
 
 CREATE VIEW prescription_info AS
 SELECT
-	prescription_id as "Prescription ID",
-	prescription_name as "Prescription Name",
+	prescription_id as "Prescription_ID",
+	prescription_name as "Prescription_Name",
 	prescription_details as "Description",
 	prescription_cost as "Cost"
 FROM
