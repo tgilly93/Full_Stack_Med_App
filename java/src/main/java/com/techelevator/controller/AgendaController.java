@@ -123,27 +123,27 @@ public class AgendaController {
         return agendaDao.getAllAgendas();
     }
 
-    @RequestMapping(path = "/doctor/{doctorName}", method = RequestMethod.GET)
+    @RequestMapping(path = "/agenda/all/doctor/{doctorName}", method = RequestMethod.GET)
     public List<Agenda> getAllAgendasByDoctorName(@PathVariable String doctorName) {
         return agendaDao.getAllAgendasByDoctorName(doctorName);
     }
 
-    @RequestMapping(path = "/patient/name/{patientName}", method = RequestMethod.GET)
+    @RequestMapping(path = "/agenda/all/patient/name/{patientName}", method = RequestMethod.GET)
     public List<Agenda> getAllAgendasByPatientName(@PathVariable String patientName) {
         return agendaDao.getAllAgendasByPatientName(patientName);
     }
 
-    @RequestMapping(path = "/patient/id/{patientId}", method = RequestMethod.GET)
+    @RequestMapping(path = "/agenda/all/patient/id/{patientId}", method = RequestMethod.GET)
     public List<Agenda> getAllAgendasByPatientId(@PathVariable int patientId) {
         return agendaDao.getAllAgendasByPatientId(patientId);
     }
 
-    @RequestMapping(path = "/appointment/{appointmentType}", method = RequestMethod.GET)
+    @RequestMapping(path = "/agenda/all/appointment/type/{appointmentType}", method = RequestMethod.GET)
     public List<Agenda> getAllAgendasByAppointmentType(@PathVariable String appointmentType) {
         return agendaDao.getAllAgendasByAppointmentType(appointmentType);
     }
 
-    @RequestMapping(path = "/appointment/{appointmentStatus}", method = RequestMethod.GET)
+    @RequestMapping(path = "/agenda/all/appointment/status/{appointmentStatus}", method = RequestMethod.GET)
     public List<Agenda> getAllAgendasByAppointmentStatus(@PathVariable String appointmentStatus) {
         return agendaDao.getAllAgendasByAppointmentStatus(appointmentStatus);
     }
