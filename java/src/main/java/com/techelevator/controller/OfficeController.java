@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
+@CrossOrigin //allows app to talk to API - MP
 @RequestMapping("/api/offices")
 public class OfficeController {
     @Autowired

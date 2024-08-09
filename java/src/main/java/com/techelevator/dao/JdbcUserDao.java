@@ -61,7 +61,11 @@ public class JdbcUserDao implements UserDao {
             username = "";
         }
         User user = null;
-        String sql = "SELECT * FROM users WHERE username ILIKE ?";
+        String sql = "SELECT users.user_id, username, password_hash, role,\n" +
+                "patient_id, patient_first_name || ' ' || patient_last_name as name, patient_date_of_birth, patient_address, patient_city, patient_state, zip_code, patient_phone_number\n" +
+                "FROM public.users \n" +
+                "INNER JOIN public.patient ON users.user_id = patient.user_id\n" +
+                "WHERE users.username ILIKE ?;";
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, username);
             if (results.next()) {
@@ -105,10 +109,10 @@ public class JdbcUserDao implements UserDao {
         user.setPassword(rs.getString("password_hash"));
         user.setAuthorities(Objects.requireNonNull(rs.getString("role")));
         user.setName(rs.getString("name"));
-        user.setAddress(rs.getString("address"));
-        user.setCity(rs.getString("city"));
-        user.setStateCode(rs.getString("state_code"));
-        user.setZIP(rs.getString("zip"));
+        user.setAddress(rs.getString("patient_address"));
+        user.setCity(rs.getString("patient_city"));
+        user.setStateCode(rs.getString("patient_state"));
+        user.setZIP(rs.getString("zip_code"));
         user.setActivated(true);
         return user;
     }
