@@ -1,93 +1,119 @@
 package com.techelevator.controller;
 
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.dao.AgendaDao;
 import com.techelevator.model.Agenda;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/agendas")
 public class AgendaController {
     @Autowired
     private AgendaDao agendaDao;
 
-    @RequestMapping(path = "/{date}", method = RequestMethod.GET)
-    public Agenda getAgendaByDate(@PathVariable Date date) {
-        return agendaDao.getAgendaByDate(date);
+    @RequestMapping(path = "/schedule/today/all", method = RequestMethod.GET)
+    public List<Agenda> getDailyAgendas(){
+        return agendaDao.getDailyAgendas();
     }
 
-    @RequestMapping(path = "/dayOfWeek/{dayOfWeek}", method = RequestMethod.GET)
-    public Agenda getAgendaByDayOfWeek(@PathVariable String dayOfWeek) {
-        return agendaDao.getAgendaByDayOfWeek(dayOfWeek);
+    @RequestMapping(path = "/schedule/week", method = RequestMethod.GET)
+    public List<Agenda> getAllAgendasByWeek(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        return agendaDao.getAllAgendasByWeek(date);
     }
 
-    @RequestMapping(path = "/doctor/{doctorName}/{date}", method = RequestMethod.GET)
-    public Agenda getAgendaByDoctorName(@PathVariable String doctorName, @PathVariable Date date) {
-        return agendaDao.getAgendaByDoctorName(doctorName, date);
-    }
-
-    @RequestMapping(path = "/patient/{patientName}/{date}", method = RequestMethod.GET)
-    public Agenda getAgendaByPatientName(@PathVariable String patientName, @PathVariable Date date) {
-        return agendaDao.getAgendaByPatientName(patientName, date);
+    @RequestMapping(path = "/schedule/month", method=RequestMethod.GET)
+    public List<Agenda> getAllAgendasByMonth(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        return agendaDao.getAllAgendasByMonth(date);
     }
     
-    @RequestMapping(path = "/patient/{patientId}/{date}", method = RequestMethod.GET)
-    public Agenda getAgendaByPatientId(@PathVariable int patientId, @PathVariable Date date) {
-        return agendaDao.getAgendaByPatientId(patientId, date);
+
+    @RequestMapping(path = "/doctor/daily/time/{doctorName}", method = RequestMethod.GET)
+    public Agenda getDailyAgendaByDoctorNameTime(@PathVariable String doctorName, @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime appointmentStartTime) {
+        return agendaDao.getDailyAgendaByDoctorNameTime(doctorName, appointmentStartTime);
     }
 
-    @RequestMapping(path = "/appointment/{appointmentType}/{date}", method = RequestMethod.GET)
-    public Agenda getAgendaByAppointmentType(@PathVariable String appointmentType, @PathVariable Date date) {
-        return agendaDao.getAgendaByAppointmentType(appointmentType, date);
+    @RequestMapping(path = "/patient/daily/time/{patientName}", method = RequestMethod.GET)
+    public Agenda getDailyAgendaByPatientNameTime(@PathVariable String patientName, @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime appointmentStartTime) {
+        return agendaDao.getDailyAgendaByPatientNameTime(patientName, appointmentStartTime);
+    }
+    
+    @RequestMapping(path = "/patient/daily/all/id/{patientId}", method = RequestMethod.GET)
+    public List<Agenda> getDailyAgendaByPatientId(@PathVariable int patientId) {
+        return agendaDao.getDailyAgendaByPatientId(patientId);
     }
 
-    @RequestMapping(path = "/appointment/{appointmentStatus}/{date}", method = RequestMethod.GET)
-    public Agenda getAgendaByAppointmentStatus(@PathVariable String appointmentStatus, @PathVariable Date date) {
-        return agendaDao.getAgendaByAppointmentStatus(appointmentStatus, date);
+    @RequestMapping(path = "/doctor/daily/all/{doctorName}", method = RequestMethod.GET)
+    public List<Agenda> getDailyAgendaByDoctorName(@PathVariable String doctorName) {
+        return agendaDao.getDailyAgendaByDoctorName(doctorName);
     }
 
-    @RequestMapping(path = "/appointment/{scheduleBlock}/{date}", method = RequestMethod.GET)
-    public Agenda getAgendaByScheduleBlock(@PathVariable int scheduleBlock, @PathVariable Date date) {
-        return agendaDao.getAgendaByScheduleBlock(scheduleBlock, date);
+    @RequestMapping(path = "/patient/daily/all/name/{patientName}", method = RequestMethod.GET)
+    public List<Agenda> getDailyAgendaByPatientName(@PathVariable String patientName) {
+        return agendaDao.getDailyAgendaByPatientName(patientName);
     }
 
-    @RequestMapping(path = "/appointment/{appointmentStartTime}/{date}", method = RequestMethod.GET)
-    public Agenda getAgendaByAppointmentStartTime(@PathVariable Time appointmentStartTime, @PathVariable Date date) {
-        return agendaDao.getAgendaByAppointmentStartTime(appointmentStartTime, date);
+    @RequestMapping(path = "/appointment/daily/all/status/{appointmentStatus}", method = RequestMethod.GET)
+    public List<Agenda> getDailyAgendaByAppointmentStatus(@PathVariable String appointmentStatus) {
+        return agendaDao.getDailyAgendaByAppointmentStatus(appointmentStatus);
     }
 
-    @RequestMapping(path = "/doctor/{doctorName}/{appointmentStatus}", method = RequestMethod.GET)
+    @RequestMapping(path = "/appointment/daily/all/type/{appointmentType}", method = RequestMethod.GET)
+    public List<Agenda> getDailyByAppointmentType(@PathVariable String appointmentType) {
+        return agendaDao.getDailyByAppointmentType(appointmentType);
+    }
+
+    @RequestMapping(path = "/appointment/daily/all/schedule/{scheduleBlock}", method = RequestMethod.GET)
+    public List<Agenda> getDailyAgendaByScheduleBlock(@PathVariable int scheduleBlock) {
+        return agendaDao.getDailyAgendaByScheduleBlock(scheduleBlock);
+    }
+
+    @RequestMapping(path = "/appointment/date/{date}/start/{appointmentStartTime}", method = RequestMethod.GET)
+    public Agenda getAgendaByAppointmentStartTime(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date, @PathVariable @DateTimeFormat(pattern = "HH:mm") LocalTime appointmentStartTime) {
+        return agendaDao.getAgendaByAppointmentStartTime(date, appointmentStartTime);
+    }
+
+    @RequestMapping(path = "/appointment/date/{date}/type/{appointmentType}", method = RequestMethod.GET)
+    public Agenda getAgendaByAppointmentTypeDateTime(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date, @PathVariable String appointmentType, @PathVariable @DateTimeFormat(pattern = "HH:mm") LocalTime appointmentStartTime) {
+        return agendaDao.getAgendaByAppointmentTypeDateTime(date, appointmentType, appointmentStartTime );
+    }
+
+    @RequestMapping(path = "/appointment/doctor/name/{doctorName}/status/confirmed/{appointmentStatus}", method = RequestMethod.GET)
     public List<Agenda> getAllConfirmedByDoctor(@PathVariable String doctorName, @PathVariable String appointmentStatus) {
         return agendaDao.getAllConfirmedByDoctor(doctorName, appointmentStatus);
     }
 
-    @RequestMapping(path = "/patient/{patientName}/{appointmentStatus}", method = RequestMethod.GET)
+    @RequestMapping(path = "/appointment/patient/name/{patientName}/status/confirmed/{appointmentStatus}", method = RequestMethod.GET)
     public List<Agenda> getAllConfirmedByPatient(@PathVariable String patientName, @PathVariable String appointmentStatus) {
         return agendaDao.getAllConfirmedByPatient(patientName, appointmentStatus);
     }
 
-    @RequestMapping(path = "/patient/{patientId}/{appointmentStatus}", method = RequestMethod.GET)
+    @RequestMapping(path = "/appointment/patient/id/{patientId}/status/confirmed/{appointmentStatus}", method = RequestMethod.GET)
     public List<Agenda> getAllConfirmedByPatientId(@PathVariable int patientId, @PathVariable String appointmentStatus) {
         return agendaDao.getAllConfirmedByPatientId(patientId, appointmentStatus);
     }
 
-    @RequestMapping(path = "/doctor/{doctorName}/{appointmentType}", method = RequestMethod.GET)
+    @RequestMapping(path = "/appointment/doctor/name/{doctorName}/type/urgent/{appointmentType}", method = RequestMethod.GET)
     public List<Agenda> getAllUrgentByDoctor(@PathVariable String doctorName, @PathVariable String appointmentType) {
         return agendaDao.getAllUrgentByDoctor(doctorName, appointmentType);
     }
 
-    @RequestMapping(path = "/patient/{patientName}/{appointmentType}", method = RequestMethod.GET)
+    @RequestMapping(path = "/appointment/patient/name/{patientName}/type/urgent/{appointmentType}", method = RequestMethod.GET)
     public List<Agenda> getAllUrgentByPatient(@PathVariable String patientName, @PathVariable String appointmentType) {
         return agendaDao.getAllUrgentByPatient(patientName, appointmentType);
     }
 
-    @RequestMapping(path = "/patient/{patientId}/{appointmentType}", method = RequestMethod.GET)
+    @RequestMapping(path = "/appointment/patient/id/{patientId}/urgent/{appointmentType}", method = RequestMethod.GET)
     public List<Agenda> getAllUrgentByPatientId(@PathVariable int patientId, @PathVariable String appointmentType) {
         return agendaDao.getAllUrgentByPatientId(patientId, appointmentType);
     }
@@ -122,53 +148,19 @@ public class AgendaController {
         return agendaDao.getAllAgendasByAppointmentStatus(appointmentStatus);
     }
 
-    @RequestMapping(path = "/{date}", method = RequestMethod.PUT)
-    public boolean updateAgenda(@PathVariable Agenda date) {
-        return agendaDao.updateAgenda(date);
+    @RequestMapping(path = "/change/agenda", method = RequestMethod.PUT)
+    public boolean updateAgenda(@RequestBody Agenda agenda) {
+        return agendaDao.updateAgenda(agenda);
     }
 
-    @RequestMapping(path = "/{date}", method = RequestMethod.POST)
-    public boolean addAgenda(@PathVariable Agenda date) {
-        return agendaDao.addAgenda(date);
+    @RequestMapping(path = "/create/agenda", method = RequestMethod.POST)
+    public boolean addAgenda(@RequestBody Agenda agenda) {
+        return agendaDao.addAgenda(agenda);
     }
 
-    @RequestMapping(path = "/{date}", method = RequestMethod.DELETE)
-    public boolean deleteAgenda(@PathVariable Date date) {
-        return agendaDao.deleteAgenda(date);
+    @RequestMapping(path = "/remove/agenda", method = RequestMethod.DELETE)
+    public boolean deleteAgenda(@RequestBody Agenda agenda) {
+        return agendaDao.deleteAgenda(agenda);
     }
 
-    @RequestMapping(path = "/patient/{patientId}", method = RequestMethod.DELETE)
-    public boolean deleteAgendaByPatientId(@RequestParam int patientId) {
-        return agendaDao.deleteAgendaByPatientId(patientId);
-    }
-
-    @RequestMapping(path = "/doctor/{doctorName}", method = RequestMethod.DELETE)
-    public boolean deleteAgendaByDoctorName(@PathVariable String doctorName) {
-        return agendaDao.deleteAgendaByDoctorName(doctorName);
-    }
-
-    @RequestMapping(path = "/patient/{patientName}", method = RequestMethod.DELETE)
-    public boolean deleteAgendaByPatientName(@PathVariable String patientName) {
-        return agendaDao.deleteAgendaByPatientName(patientName);
-    }
-
-    @RequestMapping(path = "/appointment/{appointmentType}", method = RequestMethod.DELETE)
-    public boolean deleteAgendaByAppointmentType(@PathVariable String appointmentType) {
-        return agendaDao.deleteAgendaByAppointmentType(appointmentType);
-    }
-
-    @RequestMapping(path = "/appointment/{appointmentStatus}", method = RequestMethod.DELETE)
-    public boolean deleteAgendaByAppointmentStatus(@PathVariable String appointmentStatus) {
-        return agendaDao.deleteAgendaByAppointmentStatus(appointmentStatus);
-    }
-    
-    @RequestMapping(path = "/appointment/{scheduleBlock}", method = RequestMethod.DELETE)
-    public boolean deleteAgendaByScheduleBlock(@PathVariable int scheduleBlock) {
-        return agendaDao.deleteAgendaByScheduleBlock(scheduleBlock);
-    }
-
-    @RequestMapping(path = "/appointment/{appointmentStartTime}", method = RequestMethod.DELETE)
-    public boolean deleteAgendaByAppointmentStartTime(@PathVariable Time appointmentStartTime) {
-        return agendaDao.deleteAgendaByAppointmentStartTime(appointmentStartTime);
-    }
 }
