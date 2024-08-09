@@ -5,6 +5,7 @@ const http = axios.create({
 });
 
 export default {
+  
 
   login(user) {
     return http.post('/login', user)

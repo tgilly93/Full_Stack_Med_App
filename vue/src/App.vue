@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import OfficeInfo from './components/officeinfo';
+import OfficeInfo from './components/OfficeInfo';
 
 export default {
   components: {

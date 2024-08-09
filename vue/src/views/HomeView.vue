@@ -6,6 +6,13 @@
 </template>
 
 <script>
+import OfficeInfo from "../components/OfficeInfo";
+
 export default {
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    OfficeInfo 
+  }
+  
 };
 </script>
