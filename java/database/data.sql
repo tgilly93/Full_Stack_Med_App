@@ -28,7 +28,7 @@ INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, 
 
 ---------------------------------------------------------------------------------------------------
 ------------------------------------Views----------------------------------------------------------
-
+/*
 CREATE VIEW patient_contact AS
 SELECT
 	patient_first_name,
@@ -168,6 +168,6 @@ FROM
 	JOIN staff s on s.staff_id = c.staff_id
 	JOIN patient p on p.patient_id = a.patient_id
 	JOIN scheduling_blocks sc on sc.start_time = a.start_time AND sc.end_time = a.end_time;
-	
+	*/
 --------------------------------------------------------------------------------
 COMMIT TRANSACTION;

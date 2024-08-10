@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor-Patient Connect</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Welcome to Doctor-Patient Connect</h1>
+            <p>Connecting you with the best doctors and pharmacists.</p>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="register.html" class="btn">Register</a>
+                <a href="login.html" class="btn">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Our Features</h2>
+            <div class="feature">
+                <h3>Easy Scheduling</h3>
+                <p>Book appointments with your doctor effortlessly.</p>
+            </div>
+            <div class="feature">
+                <h3>Online Consultations</h3>
+                <p>Consult with doctors from the comfort of your home.</p>
+            </div>
+            <div class="feature">
+                <h3>Prescription Transparency</h3>
+                <p>Know the cost of your prescriptions before you buy.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>We are committed to providing the best healthcare experience by connecting patients with trusted doctors and pharmacists. Our platform offers a wide range of features to make your healthcare journey smoother and more transparent.</p>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <p>If you have any questions, feel free to reach out to us at <a href="mailto:info@doctorpatientconnect.com">info@doctorpatientconnect.com</a>.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Doctor-Patient Connect. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
