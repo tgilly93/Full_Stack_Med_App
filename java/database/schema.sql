@@ -80,7 +80,7 @@ CREATE TABLE Appointment (
 	end_time time NOT NULL,
 	appointment_type varchar(50) NOT NULL,
 	appointment_status varchar(50) NOT NULL,
-	CONSTRAINT PK_Appointment PRIMARY KEY(npi_number, patient_id),
+	CONSTRAINT PK_Appointment PRIMARY KEY(npi_number, patient_id, date, start_time),
 	CONSTRAINT FK_Appointment_Clinician FOREIGN KEY(npi_number) REFERENCES Clinician(npi_number),
 	FOREIGN KEY(patient_id) REFERENCES Patient(patient_id)
 );

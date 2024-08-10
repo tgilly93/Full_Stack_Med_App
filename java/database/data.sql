@@ -24,7 +24,17 @@ INSERT INTO prescription (prescription_name, patient_id, npi_number, prescriptio
 
 INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '08/07/2024', '08:00', '09:00', 'Well Visit', 'Confirmed');
 
+INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '08/08/2024', '10:00', '12:00', 'Outpatient Visit', 'Confirmed');
+
+INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '08/09/2024', '13:00', '13:30', 'OBGYN Visit', 'Confirmed');
+
 INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '08/07/2024', 'Wednesday', '08:00', '09:00', 'true');
+
+INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '08/08/2024', 'Thursday', '10:00', '11:00', 'true');
+
+INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '08/08/2024', 'Thursday', '11:00', '12:00', 'true');
+
+INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '08/09/2024', 'Friday', '13:00', '14:00', 'true');
 
 ---------------------------------------------------------------------------------------------------
 ------------------------------------Views----------------------------------------------------------
@@ -54,39 +64,144 @@ FROM
 	INNER JOIN availability a on a.npi_number = c.npi_number
 	INNER JOIN staff s on s.staff_id = c.staff_id;
 
+CREATE VIEW time_blocks AS
+SELECT
+	npi_number,
+    	start_time || ' - ' || end_time AS "Time Block",
+    	start_time,
+    	end_time
+FROM
+    	appointment
+GROUP BY
+    	npi_number, start_time, end_time
+ORDER BY
+    	start_time, end_time;
+
+
 CREATE VIEW scheduling_blocks AS
 SELECT
-	start_time || ' - ' || end_time as "Time_Block",
-	Count(*) as block_id,
-	start_time,
-	end_time
+	ROW_NUMBER() OVER (ORDER BY start_time, end_time) AS block_id,
+	npi_number,
+    	"Time Block",
+    	start_time,
+    	end_time
 FROM
-	availability
-GROUP BY
-	start_time, end_time;
+	time_blocks;
 
 CREATE VIEW scheduled_appointments AS
 SELECT
-<<<<<<< HEAD
-	date as "Selected_Date",
-	patient_id as Patient,
-	s.staff_last_name ||', ' || s.staff_first_name AS Doctor,
-	sc.block_id as "Time_Block",
-	appointment_type as Type,
-	appointment_status as Status
-=======
-	a.date as "Selected Date",
-	a.patient_id as Patient,
-	s.staff_last_name ||', ' || s.staff_first_name AS Doctor,
+	a.date as "Date",
+	TO_CHAR(a.date, 'Day') AS "Day_of_Week",
+	s.staff_last_name ||', ' || s.staff_first_name AS "Doctor",
+	a.patient_id as "Patient",
+	p.patient_first_name || ' ' || p.patient_last_name AS "Patient Name",
 	sc.block_id as "Time Block",
+	sc.start_time,
+	sc.end_time,
 	a.appointment_type as Type,
 	a.appointment_status as Status
->>>>>>> 50ff2e0756989b19634ff581598450709c03d905
 FROM
 	appointment a
 	JOIN clinician c on c.npi_number = a.npi_number
 	JOIN staff s on s.staff_id = c.staff_id
+	JOIN patient p on p.patient_id = a.patient_id
 	JOIN scheduling_blocks sc on sc.start_time = a.start_time AND sc.end_time = a.end_time;
+
+CREATE OR REPLACE FUNCTION update_scheduled_appointments()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update the appointment table
+    UPDATE appointment
+    SET
+        date = NEW."Date",
+        start_time = NEW.start_time,
+        end_time = NEW.end_time,
+        appointment_type = NEW.type,
+        appointment_status = NEW.status
+    WHERE date = NEW."Date"
+      AND start_time = NEW.start_time
+      AND end_time = NEW.end_time
+      AND patient_id = NEW."Patient";
+     -- Update the staff table
+
+        UPDATE staff
+    SET
+        staff_last_name = split_part(NEW."Doctor", ', ', 1),
+        staff_first_name = split_part(NEW."Doctor", ', ', 2)
+    WHERE staff_id = (SELECT staff_id FROM clinician WHERE npi_number = (SELECT npi_number FROM appointment WHERE date = NEW."Date" AND start_time = NEW.start_time));
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_scheduled_appointments_trigger
+INSTEAD OF UPDATE ON scheduled_appointments
+FOR EACH ROW
+EXECUTE FUNCTION update_scheduled_appointments();
+
+CREATE OR REPLACE FUNCTION insert_scheduled_appointments()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Insert into appointment table
+    INSERT INTO appointment (date, start_time, end_time, appointment_type, appointment_status, npi_number, patient_id)
+    VALUES (
+        NEW."Date",
+        NEW.start_time,
+        NEW.end_time,
+        NEW.type,
+        NEW.status,
+        (SELECT npi_number 
+         FROM clinician 
+         WHERE staff_id = (SELECT staff_id 
+                           FROM staff 
+                           WHERE staff_last_name || ', ' || staff_first_name = NEW."Doctor")
+        ),
+        NEW."Patient"
+    );
+
+    -- Insert into staff table if the doctor doesn't exist
+    INSERT INTO staff (staff_last_name, staff_first_name)
+    SELECT
+        split_part(NEW."Doctor", ', ', 1),
+        split_part(NEW."Doctor", ', ', 2)
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM staff
+        WHERE staff_last_name = split_part(NEW."Doctor", ', ', 1)
+          AND staff_first_name = split_part(NEW."Doctor", ', ', 2)
+    );
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION delete_scheduled_appointments()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Delete from appointment table
+    DELETE FROM appointment
+    WHERE date = OLD."Date"
+      AND npi_number = (SELECT npi_number FROM clinician 
+         		   WHERE staff_id = (SELECT staff_id 
+                           FROM staff 
+                           WHERE staff_last_name || ', ' || staff_first_name = OLD."Doctor")
+      )	
+      AND patient_id = OLD."Patient"
+      AND start_time = OLD.start_time;
+    
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER insert_scheduled_appointments_trigger
+INSTEAD OF INSERT ON scheduled_appointments
+FOR EACH ROW
+EXECUTE FUNCTION insert_scheduled_appointments();
+
+CREATE TRIGGER delete_scheduled_appointments_trigger
+INSTEAD OF DELETE ON scheduled_appointments
+FOR EACH ROW
+EXECUTE FUNCTION delete_scheduled_appointments();
 
 CREATE VIEW office_info AS
 SELECT
@@ -103,17 +218,13 @@ FROM
 CREATE VIEW clinician_office_info AS
 SELECT 
 	s.staff_first_name ||' ' || s.staff_last_name AS Physician,
-<<<<<<< HEAD
-	o.office_name as "Primary_Location",
-=======
 	o.office_name as "Primary Location",
->>>>>>> 50ff2e0756989b19634ff581598450709c03d905
 	o.office_address as Address,
 	o.office_city as City,
 	o.state as State,
-	o.zip_code as "Zip_Code",
-	o.office_phone_number as "Phone _Number",
-	o.office_open || ' - ' || o.office_close as "Hours_of_Operation"
+	o.zip_code as "Zip Code",
+	o.office_phone_number as "Phone Number",
+	o.office_open || ' - ' || o.office_close as "Hours of Operation"
 FROM
 	office o
 	JOIN staff s on s.office_id = o.office_id
@@ -121,19 +232,19 @@ FROM
 	
 CREATE VIEW patient_active_prescription AS
 SELECT
-	pr.patient_id as "Patient_ID",
+	pr.patient_id as "Patient ID",
 	p.patient_first_name || ' ' || p.patient_last_name as "Name",
 	p.patient_date_of_birth as "DOB",
-	p.patient_address as "Street_Address",
+	p.patient_address as "Street Address",
 	p.patient_city as "City",
 	p.patient_state as "State",
-	p.zip_code as "Zip_Code",
+	p.zip_code as "Zip Code",
 	p.patient_phone_number as "Phone",
-	pr.prescription_id as "Prescription_ID",
-	pr.prescription_name as "Common_Name",
+	pr.prescription_id as "Prescription ID",
+	pr.prescription_name as "Common Name",
 	pr.prescription_details as "Description",
-	pr.prescription_status as "Prescription_Status",
-	pr.npi_number as "Prescribing_Clinician"
+	pr.prescription_status as "Prescription Status",
+	pr.npi_number as "Prescribing Clinician"
 
 FROM
 	prescription pr
@@ -142,8 +253,8 @@ FROM
 
 CREATE VIEW prescription_info AS
 SELECT
-	prescription_id as "Prescription_ID",
-	prescription_name as "Prescription_Name",
+	prescription_id as "Prescription ID",
+	prescription_name as "Prescription Name",
 	prescription_details as "Description",
 	prescription_cost as "Cost"
 FROM
@@ -151,8 +262,8 @@ FROM
 
 CREATE VIEW daily_agenda AS
 SELECT
-	current_date AS "Date",
-    	TO_CHAR(current_date, 'Day') AS "Day_of_Week",
+	a.date AS "Date",
+    	TO_CHAR(a.date, 'Day') AS "Day_of_Week",
 	s.staff_last_name ||', ' || s.staff_first_name AS "Doctor",	
 	a.patient_id as "Patient",
 	p.patient_first_name || ' ' || p.patient_last_name AS "Patient Name",
@@ -163,11 +274,128 @@ SELECT
 	a.appointment_status as Status
 FROM
 	appointment a
-	JOIN availability av on av.date = a.date
-	JOIN clinician c on c.npi_number = av.npi_number
+	JOIN clinician c on c.npi_number = a.npi_number
 	JOIN staff s on s.staff_id = c.staff_id
 	JOIN patient p on p.patient_id = a.patient_id
+<<<<<<< HEAD
 	JOIN scheduling_blocks sc on sc.start_time = a.start_time AND sc.end_time = a.end_time;
 	*/
+=======
+	JOIN scheduling_blocks sc on sc.start_time = a.start_time AND sc.end_time = a.end_time
+WHERE a.date = current_date;
+
+CREATE OR REPLACE FUNCTION get_daily_agenda_for_date(p_date DATE)
+RETURNS TABLE (
+    "Date" DATE,
+    "Day_of_Week" TEXT,
+    "Doctor" TEXT,
+    "Patient" bigint,
+    "Patient Name" TEXT,
+    "Time Block" bigint,
+    start_time TIME,
+    end_time TIME,
+    Type varchar(50),
+    Status varchar(50)
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        a.date AS "Date",
+        TO_CHAR(a.date, 'Day') AS "Day_of_Week",
+        s.staff_last_name ||', ' || s.staff_first_name AS "Doctor",    
+        a.patient_id::bigint AS "Patient",
+        p.patient_first_name || ' ' || p.patient_last_name AS "Patient Name",
+        sc.block_id::bigint AS "Time Block",
+        sc.start_time,
+        sc.end_time,
+        a.appointment_type::varchar(50) AS Type,
+        a.appointment_status::varchar(50) AS Status
+    FROM
+        appointment a
+    JOIN clinician c ON c.npi_number = a.npi_number
+    JOIN staff s ON s.staff_id = c.staff_id
+    JOIN patient p ON p.patient_id = a.patient_id
+    JOIN scheduling_blocks sc ON sc.start_time = a.start_time AND sc.end_time = a.end_time
+    WHERE a.date = p_date;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE VIEW weekly_agenda AS
+SELECT
+	date_trunc('week', a.date) AS "Week_Start_Date",
+    	TO_CHAR(date_trunc('week', a.date), 'Week of YYYY-MM-DD') AS "Week_Label",
+	a.date AS "Date",
+	TO_CHAR(a.date, 'Day') AS "Day_of_Week",
+    	s.staff_last_name || ', ' || s.staff_first_name AS "Doctor",
+    	a.patient_id AS "Patient",
+    	p.patient_first_name || ' ' || p.patient_last_name AS "Patient Name",
+    	sc.block_id AS "Time Block",
+    	sc.start_time,
+    	sc.end_time,
+    	a.appointment_type AS Type,
+    	a.appointment_status AS Status
+FROM
+    appointment a
+	JOIN clinician c ON c.npi_number = a.npi_number
+	JOIN staff s ON s.staff_id = c.staff_id
+	JOIN patient p ON p.patient_id = a.patient_id
+	JOIN scheduling_blocks sc ON sc.start_time = a.start_time AND sc.end_time = a.end_time
+GROUP BY
+    	date_trunc('week', a.date),
+	a.date,
+    	s.staff_last_name, 
+    	s.staff_first_name, 
+    	a.patient_id, 
+    	p.patient_first_name, 
+    	p.patient_last_name, 
+    	sc.block_id, 
+    	sc.start_time, 
+    	sc.end_time, 
+    	a.appointment_type, 
+    	a.appointment_status
+ORDER BY
+    	"Week_Start_Date", 
+    	"Doctor", 
+    	"Patient";
+
+CREATE OR REPLACE VIEW monthly_agenda AS
+SELECT
+    	date_trunc('month', a.date) AS "Month_Start_Date",
+    	TO_CHAR(date_trunc('month', a.date), 'Month YYYY') AS "Month_Label",
+	a.date AS "Date",
+	TO_CHAR(a.date, 'Day') AS "Day_of_Week",
+    	s.staff_last_name || ', ' || s.staff_first_name AS "Doctor",
+    	a.patient_id AS "Patient",
+    	p.patient_first_name || ' ' || p.patient_last_name AS "Patient Name",
+    	sc.block_id AS "Time Block",
+    	sc.start_time,
+    	sc.end_time,
+    	a.appointment_type AS Type,
+    	a.appointment_status AS Status
+FROM
+    appointment a
+	JOIN clinician c ON c.npi_number = a.npi_number
+	JOIN staff s ON s.staff_id = c.staff_id
+	JOIN patient p ON p.patient_id = a.patient_id
+	JOIN scheduling_blocks sc ON sc.start_time = a.start_time AND sc.end_time = a.end_time
+GROUP BY
+    	date_trunc('month', a.date),
+    	a.date,
+	s.staff_last_name, 
+    	s.staff_first_name, 
+    	a.patient_id, 
+    	p.patient_first_name, 
+    	p.patient_last_name, 
+    	sc.block_id, 
+    	sc.start_time, 
+    	sc.end_time, 
+    	a.appointment_type, 
+    	a.appointment_status
+ORDER BY
+    	"Month_Start_Date", 
+    	"Doctor", 
+    	"Patient";
+	
+>>>>>>> 07ab061273e508781188a5a056f9d5c48f3184bd
 --------------------------------------------------------------------------------
 COMMIT TRANSACTION;

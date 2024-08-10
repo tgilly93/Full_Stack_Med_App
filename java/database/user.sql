@@ -22,6 +22,7 @@ TO final_capstone_appuser;
 
 GRANT USAGE, SELECT
 ON ALL SEQUENCES IN SCHEMA public
+<<<<<<< HEAD
 TO final_capstone_appuser;
 
 
@@ -31,3 +32,6 @@ patient_id, patient_first_name, patient_last_name, patient_date_of_birth, patien
 FROM public.users 
 INNER JOIN public.patient ON users.user_id = patient.user_id
 WHERE users.username ILIKE ?;*/
+=======
+TO final_capstone_appuser;
+>>>>>>> 07ab061273e508781188a5a056f9d5c48f3184bd
