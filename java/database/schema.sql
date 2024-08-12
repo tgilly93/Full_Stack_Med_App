@@ -38,11 +38,17 @@ CREATE TABLE Staff (
 );
 
 CREATE TABLE users (
-	user_id serial NOT NULL,
-	username varchar(50) UNIQUE NOT NULL,
-	password_hash varchar(200) NOT NULL,
-	role varchar(50) NOT NULL,
-	CONSTRAINT PK_users PRIMARY KEY(user_id)
+    	user_id SERIAL,
+    	username varchar(50) NOT NULL UNIQUE,
+    	password_hash varchar(200) NOT NULL,
+    	role varchar(50) NOT NULL,
+    	name varchar(50) NOT NULL,
+    	address varchar(100) NULL,
+    	city varchar(50) NULL,
+    	state_code char(2) NULL,
+    	zip varchar(5) NULL,
+    	CONSTRAINT PK_user PRIMARY KEY (user_id)
+
 );
 
 CREATE TABLE Patient (
