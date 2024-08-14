@@ -10,11 +10,13 @@ import HeaderVue from '../components/Header.vue';
 import FeaturesVue from '../components/Features.vue';
 import OfficeInfoVue from '../components/OfficeInfo.vue';
 
+
 export default {
   components: {
     HeaderVue, 
     FeaturesVue, 
-    OfficeInfoVue
+    OfficeInfoVue,
+    
 
   }
 };

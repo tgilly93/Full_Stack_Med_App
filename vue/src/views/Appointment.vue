@@ -1,4 +1,5 @@
 <template>
+  <router-link class="btn" v-bind:to="{ name: 'home' }" v-if="$store.state.token != ''">Home</router-link>
     <div class="appointment-container">
       <div class="appointment-form">
         <h1>Book an Appointment</h1>
@@ -59,7 +60,7 @@
             ></textarea>
           </div>
   
-          <button type="submit" :disabled="!isFormValid">Book Appointment</button>
+          <button type="submit" :disabled="!isFormValid">Book New Appointment</button>
         </form>
       </div>
   
@@ -80,6 +81,8 @@
   </template>
   
   <script>
+  import AppointmentService from '../services/AppointmentService';
+
   export default {
     data() {
       return {
@@ -200,6 +203,19 @@
     border: 1px solid #ccc;
     border-radius: 4px;
   }
+
+  button {
+  padding: 10px 20px;
+  background-color: #42b983;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #368a6d;
+}
   
   input.is-invalid,
   textarea.is-invalid {

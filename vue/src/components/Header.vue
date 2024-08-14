@@ -1,7 +1,6 @@
 <template>
     <div id = "header-component">
             <h1>Welcome to Doctor-Patient Connect</h1>
-            <p>Connecting you with the best doctors and pharmacists.</p>
             <nav>
                 <router-link class="btn" v-bind:to="{ name: 'appointment' }" v-if="$store.state.token != ''">myappointments</router-link>
                 <a href="#about" class="btn">About</a>
@@ -9,13 +8,14 @@
                 <a href="register.html" class="btn">Register</a>
                 <router-link class="btn" v-bind:to="{ name: 'login' }" v-if="$store.state.token === ''">Login</router-link>
                 <router-link class="btn" v-bind:to="{ name: 'logout' }" v-if="$store.state.token != ''">Logout</router-link>
+                <router-link class="btn" v-bind:to="{ name: 'about' }" v-if="$store.state.token === ''">About</router-link>
             </nav>
         </div>
 </template>
 
 <style scoped>
 #header-component {
-    width: 80%;
+    width: 100%;
     margin: auto;
     overflow: hidden;
     background: #50b3a2;
@@ -43,7 +43,6 @@
 }
 
 #header-component h1 {
-    float: left;
     margin-top: 0;
 }
 
@@ -62,4 +61,5 @@
     margin-left: 10px;
 }
 </style>
+
 

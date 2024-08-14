@@ -7,6 +7,7 @@ import LoginView from '../views/LoginView.vue';
 import LogoutView from '../views/LogoutView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import AppointmentView from '../views/Appointment.vue';
+import AboutViewVue from '../views/AboutView.vue';
 
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
@@ -56,7 +57,16 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: AboutViewVue,
+    meta: {
+      requiresAuth: true
+    }
   }
+
 ];
 
 // Create the router

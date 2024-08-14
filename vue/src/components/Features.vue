@@ -1,6 +1,7 @@
 <template>
     <section id="features" class="features">
         <div class="container">
+            <h1>Connecting you with the best doctors and pharmacists.</h1>
             <h2>Our Features</h2>
             <div class="feature">
                 <h3>Easy Scheduling</h3>
@@ -19,6 +20,15 @@
 </template>
 
 <style scoped>
+h1.container {
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start; 
+    width: 100vw; 
+     margin: 0;
+}
 .container {
     width: 80%;
     margin: auto;

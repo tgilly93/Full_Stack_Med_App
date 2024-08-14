@@ -31,7 +31,7 @@ export default {
     zipCode: "19702",
     officeOpen: "08:00:00",
     officeClose: "19:00:00",
-    doctors: null,
+    doctors: "Java Blue",
     costPerHour: 0.0,
       officeHours: {
         'Monday': '8:00am - 5:00pm',
@@ -65,13 +65,15 @@ export default {
 <style scoped>
 .office-info {
   font-family: Arial, sans-serif;
+  display: grid;
   padding: 20px;
   max-width: 600px;
-  margin: auto;
+  margin: 20px 0;
 }
 
 h1 {
   color: #333;
+  font-size: 25px;
 }
 
 strong {
