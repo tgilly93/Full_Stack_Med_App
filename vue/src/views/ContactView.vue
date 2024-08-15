@@ -39,8 +39,9 @@
   
   <style scoped>
   .contact-section {
+    text-align: center;
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #14e9bb;
     border: 1px solid #ddd;
   }
   
