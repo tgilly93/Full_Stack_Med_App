@@ -65,6 +65,14 @@ const routes = [
     meta: {
       requiresAuth: false
     }
+  },
+  {
+    path: '/contact',
+    name: 'contact',
+    component: AboutViewVue,
+    meta: {
+      requiresAuth: false
+    }
   }
 
 ];

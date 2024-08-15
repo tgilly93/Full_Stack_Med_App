@@ -29,8 +29,6 @@ export default {
     officeCity: "Newark",
     state: "DE",
     zipCode: "19702",
-    officeOpen: "08:00:00",
-    officeClose: "19:00:00",
     doctors: "Java Blue",
     costPerHour: 0.0,
       officeHours: {
@@ -66,17 +64,17 @@ export default {
 .office-info {
   font-family: Arial, sans-serif;
   display: grid;
-  margin: 20px 0;
+  text-align: center;
+  margin: auto;
   width: 80%;
-  padding: 20px 0;
+  padding: 20px;
   background: #fff;
-  margin: 20px 0;
   margin-bottom: 20px;
 }
 
 h1 {
   color: #333;
-  font-size: 25px;
+  font-size: 22px;
 }
 
 strong {

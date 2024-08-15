@@ -20,7 +20,8 @@
 </template>
 
 <style scoped>
-h1.container {
+.container {
+    text-align: center;
     max-width: 800px;
     margin: auto;
     padding: 20px;

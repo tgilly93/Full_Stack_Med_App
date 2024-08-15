@@ -4,6 +4,7 @@
             <nav>
                 <router-link class="btn" v-bind:to="{ name: 'appointment' }" v-if="$store.state.token != ''">my appointments</router-link>
                 <router-link class="btn" v-bind:to="{ name: 'about' }" v-if="$store.state.token != ''">About</router-link>
+                <a href="#contact" class="btn">Contact Us</a>
                 <a href="register.html" class="btn">Register</a>
                 <router-link class="btn" v-bind:to="{ name: 'login' }" v-if="$store.state.token === ''">Login</router-link>
                 <router-link class="btn" v-bind:to="{ name: 'logout' }" v-if="$store.state.token != ''">Logout</router-link>

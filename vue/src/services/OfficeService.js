@@ -7,6 +7,6 @@ const http = axios.create({
 
 export default {
     getOfficeById(){
-        return http.get('/api/offices/1');
+        return http.get('/api/offices/');
     }
 }

@@ -1,5 +1,7 @@
 <template>
-    <router-link class="btn" v-bind:to="{ name: 'home' }" v-if="$store.state.token != ''">Home</router-link>
+    <nav>
+                <a href="/" class="btn">Home</a>
+            </nav>
     <div class="about-section">
       <h1>About Us</h1>
       <p>Welcome to our practice! At Doctor-Patient Connect, we are committed to providing comprehensive and compassionate care to our patients. Our team of experienced general physicians is dedicated to addressing all your healthcare needs with the utmost professionalism and empathy.</p>
@@ -106,4 +108,5 @@ li {
   margin-bottom: 1rem;
   color: red;
 }
+
 </style>
