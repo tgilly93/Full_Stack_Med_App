@@ -13,6 +13,9 @@ export default {
 
   register(user) {
     return http.post('/register', user)
+  },
+  home(user) {
+    return http.post('/home', user)
   }
 
 }
