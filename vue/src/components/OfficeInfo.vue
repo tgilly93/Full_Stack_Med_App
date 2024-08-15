@@ -1,8 +1,5 @@
 <template>
   <div class="office-info">
-    <h1>Doctor: {{office.officeName }}</h1>
-    <p><strong>Address:</strong> {{ office.officeAddress }}</p>
-    <p><strong>Phone number:</strong> {{ office.officePhoneNumber }}</p>
     <div class="office-hours">
       <h2>Office Hours</h2>
       <ul>
@@ -55,7 +52,7 @@ export default {
     }
   },
   created(){
-    this.getOffice();
+   // this.getOffice();
   }
 };
 </script>

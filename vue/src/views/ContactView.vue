@@ -1,4 +1,7 @@
 <template>
+    <nav>
+                <a href="/" class="btn">Home</a>
+            </nav>
     <div class="contact-section">
       <h2>Contact Us</h2>
       <div class="contact-details">

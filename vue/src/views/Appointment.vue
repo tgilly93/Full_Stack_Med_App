@@ -70,10 +70,10 @@
           <li v-if="appointments.length === 0">No appointments found.</li>
           <li v-for="appointment in appointments" :key="appointment.id">
             <strong>{{ appointment.date }}</strong>
-            <p>Name: {{ appointment.name }}</p>
-            <p>Email: {{ appointment.email }}</p>
-            <p>Phone: {{ appointment.phone }}</p>
-            <p>Notes: {{ appointment.notes }}</p>
+            <p>Clinician: {{ appointment.clinicianId }}</p>
+            <p>Start Time: {{ appointment.startTime }}</p>
+            <p>End Time: {{ appointment.endTime }}</p>
+            <p>Type: {{ appointment.appointmentType }}</p>
           </li>
         </ul>
       </div>
@@ -151,17 +151,15 @@
         this.appointmentDate = '';
         this.notes = '';
       },
-      async fetchAppointments() {
-        try {
-          // Replace with your API endpoint
-          const response = await fetch('/api/appointments');
-          if (!response.ok) {
-            throw new Error('Failed to fetch appointments');
-          }
-          this.appointments = await response.json();
-        } catch (error) {
-          console.error('Error fetching appointments:', error);
-        }
+      fetchAppointments() {
+        
+          AppointmentService.getAppointments()
+          .then(response => {
+            this.appointments = response.data;
+          })
+          .catch (error => {
+            console.error('Error fetching appointments:', error);
+          })
       }
     },
     mounted() {

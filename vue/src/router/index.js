@@ -8,6 +8,7 @@ import LogoutView from '../views/LogoutView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import AppointmentView from '../views/Appointment.vue';
 import AboutViewVue from '../views/AboutView.vue';
+import ContactViewVue from '../views/ContactView.vue';
 
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
@@ -69,7 +70,7 @@ const routes = [
   {
     path: '/contact',
     name: 'contact',
-    component: AboutViewVue,
+    component: ContactViewVue,
     meta: {
       requiresAuth: false
     }

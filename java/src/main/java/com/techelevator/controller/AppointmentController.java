@@ -21,6 +21,11 @@ public class AppointmentController {
         this.appointmentDao = appointmentDao;
     }
 
+    @GetMapping("")
+    public List<Appointment> getAllAppointments() {
+        return appointmentDao.getAllAppointments();
+    }
+
     @GetMapping("/available/{clinicianId}/date/{date}")
     public List<Appointment> getAvailableAppointmentsByClinicianIdAndDate(@PathVariable int clinicianId, @PathVariable Date date) {
         return appointmentDao.getAvailableAppointmentsByClinicianIdAndDate(clinicianId, date);

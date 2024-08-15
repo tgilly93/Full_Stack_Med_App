@@ -18,6 +18,21 @@ public class JdbcAppointmentDao implements AppointmentDao {
     }
 
     @Override
+    public List<Appointment> getAllAppointments (){
+        String sql = "SELECT a.npi_number, a.office_id, a.date, a.start_time, a.end_time, a.is_available " +
+                "FROM availability a " +
+                "LEFT JOIN appointment ap ON a.npi_number = ap.npi_number AND a.date = ap.date AND a.start_time = ap.start_time " +
+                "ORDER BY a.start_time";
+
+        List<Appointment> availableAppointments = new ArrayList<>();
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        while (results.next()) {
+            availableAppointments.add(mapRowToAvailableAppointment(results));
+        }
+        return availableAppointments;
+    }
+
+    @Override
     public List<Appointment> getAvailableAppointmentsByClinicianIdAndDate(int clinicianId, Date date) {
         String sql = "SELECT a.npi_number, a.office_id, a.date, a.start_time, a.end_time, a.is_available " +
                 "FROM availability a " +

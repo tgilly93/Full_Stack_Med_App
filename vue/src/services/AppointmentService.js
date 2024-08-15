@@ -5,7 +5,7 @@ const http = axios.create({
 });
 
 export default {
-    getAppointmentId(){
+    getAppointments(){
         return http.get('/api/appointments/');
     }
 }
