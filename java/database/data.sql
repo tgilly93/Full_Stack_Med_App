@@ -22,19 +22,19 @@ INSERT INTO prescription (prescription_name, patient_id, npi_number, prescriptio
 
 INSERT INTO prescription (prescription_name, patient_id, npi_number, prescription_details, prescription_cost, insurance_coverage, prescription_status) VALUES ('Tylenol', '1', '1000004441', 'Pain reliever', '22.98', 'Uninsured', 'Active');
 
-INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '08/07/2024', '08:00', '09:00', 'Well Visit', 'Confirmed');
+INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '08/22/2024', '08:00', '09:00', 'Well Visit', 'Confirmed');
 
-INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '08/08/2024', '10:00', '12:00', 'Outpatient Visit', 'Confirmed');
+INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '09/23/2024', '10:00', '12:00', 'Outpatient Visit', 'Confirmed');
 
-INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '08/09/2024', '13:00', '13:30', 'OBGYN Visit', 'Confirmed');
+INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '10/09/2024', '13:00', '13:30', 'OBGYN Visit', 'Confirmed');
 
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '08/07/2024', 'Wednesday', '08:00', '09:00', 'true');
+INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '08/22/2024', 'Wednesday', '08:00', '09:00', 'true');
 
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '08/08/2024', 'Thursday', '10:00', '11:00', 'true');
+INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '10/09/2024', 'Thursday', '10:00', '11:00', 'true');
 
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '08/08/2024', 'Thursday', '11:00', '12:00', 'true');
+INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '09/23/2024', 'Thursday', '11:00', '12:00', 'true');
 
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '08/09/2024', 'Friday', '13:00', '14:00', 'true');
+INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '10/09/2024', 'Friday', '13:00', '14:00', 'true');
 
 ---------------------------------------------------------------------------------------------------
 ------------------------------------Views----------------------------------------------------------
