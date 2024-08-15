@@ -21,14 +21,13 @@
 
 <style scoped>
 h1.container {
-    width: 100%;
+    max-width: 800px;
     margin: auto;
+    padding: 20px;
     overflow: hidden;
-    display: flex;
-    justify-content: flex-start; 
     width: 100vw; 
-     margin: 0;
 }
+
 .container {
     width: 80%;
     margin: auto;

@@ -78,10 +78,62 @@ export default {
 </script>
 
 <style scoped>
+
+.container {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  height: 100vh; 
+}
+
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px; 
+  padding: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: #fff;
+}
+
+
 .form-input-group {
   margin-bottom: 1rem;
 }
+
+
 label {
-  margin-right: 0.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+
+input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+button {
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+
+.alert {
+  margin-bottom: 1rem;
+  color: red;
 }
 </style>

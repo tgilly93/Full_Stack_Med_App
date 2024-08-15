@@ -66,9 +66,12 @@ export default {
 .office-info {
   font-family: Arial, sans-serif;
   display: grid;
-  padding: 20px;
-  max-width: 600px;
   margin: 20px 0;
+  width: 80%;
+  padding: 20px 0;
+  background: #fff;
+  margin: 20px 0;
+  margin-bottom: 20px;
 }
 
 h1 {

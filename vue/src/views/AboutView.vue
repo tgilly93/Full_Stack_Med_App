@@ -1,7 +1,8 @@
 <template>
+    <router-link class="btn" v-bind:to="{ name: 'home' }" v-if="$store.state.token != ''">Home</router-link>
     <div class="about-section">
       <h1>About Us</h1>
-      <p>Welcome to our practice! At [Doctor-Patient Connect], we are committed to providing comprehensive and compassionate care to our patients. Our team of experienced general physicians is dedicated to addressing all your healthcare needs with the utmost professionalism and empathy.</p>
+      <p>Welcome to our practice! At Doctor-Patient Connect, we are committed to providing comprehensive and compassionate care to our patients. Our team of experienced general physicians is dedicated to addressing all your healthcare needs with the utmost professionalism and empathy.</p>
       
       <section class="mission">
         <h2>Our Mission</h2>
@@ -23,13 +24,11 @@
   
       <section class="team">
         <h2>Meet Our Team</h2>
-        <div class="physician">
-          <img src="/path/to/physician-photo.jpg" alt="Dr. John Doe">
+        <div class="team">
           <h3>Dr. Java Blue</h3>
           <p>Dr. Java Blue is a board-certified general physician with over 15 years of experience in providing comprehensive healthcare. His areas of expertise include preventive medicine, chronic disease management, and patient education.</p>
         </div>
-        <div class="physician">
-          <img src="/path/to/physician-photo.jpg" alt="Dr. Jane Smith">
+        <div class="team">
           <h3>Dr. Jane Smith</h3>
           <p>Dr. Jane Smith specializes in family medicine and is known for her compassionate approach to patient care. She has a strong background in managing both acute and chronic conditions and is dedicated to promoting health and wellness in the community.</p>
         </div>
@@ -44,43 +43,67 @@
   </script>
   
   <style scoped>
-  .about-section {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  h1, h2, h3 {
-    color: #333;
-  }
-  
-  .mission, .services, .team {
-    margin-bottom: 20px;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  li {
-    margin-bottom: 10px;
-  }
-  
-  .physician {
-    margin-bottom: 20px;
-  }
-  
-  .physician img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin-right: 15px;
-    vertical-align: middle;
-  }
-  
-  .physician h3 {
-    margin: 0;
-  }
-  </style>
-  
+.about-section {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto; 
+  text-align: center; 
+}
+
+
+h1, h2, h3 {
+  color: #333;
+  margin: 0 0 15px;
+}
+
+
+p {
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+
+.mission, .services, .team {
+  margin-bottom: 40px; 
+}
+
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+li {
+  margin-bottom: 10px;
+}
+
+
+.physician {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  text-align: left; 
+}
+
+
+.physician img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 20px; 
+  object-fit: cover; 
+}
+
+
+.physician-info {
+  max-width: 600px; 
+}
+
+
+.alert {
+  margin-bottom: 1rem;
+  color: red;
+}
+</style>

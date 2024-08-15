@@ -63,7 +63,7 @@ const routes = [
     name: 'about',
     component: AboutViewVue,
     meta: {
-      requiresAuth: true
+      requiresAuth: false
     }
   }
 

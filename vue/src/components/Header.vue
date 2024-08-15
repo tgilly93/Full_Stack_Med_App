@@ -2,13 +2,12 @@
     <div id = "header-component">
             <h1>Welcome to Doctor-Patient Connect</h1>
             <nav>
-                <router-link class="btn" v-bind:to="{ name: 'appointment' }" v-if="$store.state.token != ''">myappointments</router-link>
-                <a href="#about" class="btn">About</a>
-                <a href="#contact" class="btn">Contact</a>
+                <router-link class="btn" v-bind:to="{ name: 'appointment' }" v-if="$store.state.token != ''">my appointments</router-link>
+                <router-link class="btn" v-bind:to="{ name: 'about' }" v-if="$store.state.token != ''">About</router-link>
                 <a href="register.html" class="btn">Register</a>
                 <router-link class="btn" v-bind:to="{ name: 'login' }" v-if="$store.state.token === ''">Login</router-link>
                 <router-link class="btn" v-bind:to="{ name: 'logout' }" v-if="$store.state.token != ''">Logout</router-link>
-                <router-link class="btn" v-bind:to="{ name: 'about' }" v-if="$store.state.token === ''">About</router-link>
+                
             </nav>
         </div>
 </template>
@@ -16,6 +15,8 @@
 <style scoped>
 #header-component {
     width: 100%;
+    text-align: center;
+    font-size: 24px;
     margin: auto;
     overflow: hidden;
     background: #50b3a2;
@@ -29,7 +30,7 @@
     color: #fff;
     text-decoration: none;
     text-transform: uppercase;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 #header-component ul {
