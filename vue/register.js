@@ -14,7 +14,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     const zip = document.getElementById('zip').value;
     const phone = document.getElementById('phone').value;
 
-    const response = await fetch('/api/auth/register', {
+    const response = await fetch('api/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

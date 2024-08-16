@@ -29,15 +29,15 @@
           </div>
   
           <div class="form-group">
-            <label for="phoneNumber">Phone Number</label>
+            <label for="startTime">Start Time</label>
             <input
-              type="text"
-              id="phoneNumber"
-              v-model="phoneNumber"
-              :class="{ 'is-invalid': errors.phoneNumber }"
+              type="time"
+              id="startTime"
+              v-model="startTime"
+              :class="{ 'is-invalid': errors.appointmentStartTime }"
               required
             />
-            <div v-if="errors.phoneNumber" class="error">{{ errors.phoneNumber }}</div>
+            <div v-if="errors.startTime" class="error">{{ errors.appointmentStartTime }}</div>
           </div>
   
           <div class="form-group">
@@ -70,10 +70,13 @@
           <li v-if="appointments.length === 0">No appointments found.</li>
           <li v-for="appointment in appointments" :key="appointment.id">
             <strong>{{ appointment.date }}</strong>
-            <p>Clinician: {{ appointment.clinicianId }}</p>
-            <p>Start Time: {{ appointment.startTime }}</p>
-            <p>End Time: {{ appointment.endTime }}</p>
+            <p>MRN: {{ appointment.patientId }}</p>
+            <p>Patient: {{ appointment.patientName }}</p>
+            <p>Clinician: {{ appointment.doctorName }}</p>
+            <p>Start Time: {{ appointment.appointmentStartTime }}</p>
+            <p>End Time: {{ appointment.appointmentEndTime }}</p>
             <p>Type: {{ appointment.appointmentType }}</p>
+            <p>Status: {{ appointment.appointmentStatus }}</p>
           </li>
         </ul>
       </div>
@@ -86,9 +89,10 @@
   export default {
     data() {
       return {
+        doctorName: '',
         patientName: '',
         email: '',
-        phoneNumber: '',
+        appointmentStartTime: '',
         appointmentDate: '',
         notes: '',
         errors: {},
@@ -97,7 +101,7 @@
     },
     computed: {
       isFormValid() {
-        return this.patientName && this.email && this.phoneNumber && this.appointmentDate && !Object.keys(this.errors).length;
+        return this.patientName && this.email && this.appointmentStartTime && this.appointmentDate && !Object.keys(this.errors).length;
       }
     },
     methods: {
@@ -114,10 +118,10 @@
           this.errors.email = 'Email must be valid';
         }
   
-        if (!this.phoneNumber) {
-          this.errors.phoneNumber = 'Phone number is required';
-        } else if (!/^\d{10}$/.test(this.phoneNumber)) {
-          this.errors.phoneNumber = 'Phone number must be 10 digits';
+        if (!this.appointmentStartTime) {
+          this.errors.appointmentStartTime = 'Phone number is required';
+        } else if (!/^\d{10}$/.test(this.startTime)) {
+          this.errors.appointmentStartTime = 'Phone number must be 10 digits';
         }
   
         if (!this.appointmentDate) {
@@ -131,7 +135,7 @@
           const appointmentData = {
             name: this.patientName,
             email: this.email,
-            phone: this.phoneNumber,
+            phone: this.appointmentStartTime,
             date: this.appointmentDate,
             notes: this.notes
           };
@@ -147,7 +151,7 @@
       resetForm() {
         this.patientName = '';
         this.email = '';
-        this.phoneNumber = '';
+        this.appointmentStartTime = '';
         this.appointmentDate = '';
         this.notes = '';
       },

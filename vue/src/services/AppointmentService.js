@@ -6,6 +6,10 @@ const http = axios.create({
 
 export default {
     getAppointments(){
-        return http.get('/api/appointments/');
+        return http.get('/api/agendas/agenda/all/patient/name/test');
+    },
+
+    submitAppointment(){
+        return http.post('/api/agendas/create/agenda');
     }
 }
